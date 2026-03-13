@@ -1,0 +1,1 @@
+<img src="{{ asset('logoocp-removebg-preview.png') }}" {{ $attributes }} alt="Application Logo">
