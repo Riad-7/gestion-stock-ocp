@@ -27,6 +27,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('articles', ArticleController::class);
     Route::resource('ventes', VenteController::class)->except(['edit', 'update']);
     Route::resource('commandes', CommandeController::class);
+    Route::post('/notifications/mark-as-read', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return back();
+    })->name('notifications.markAsRead');
 });
 
 require __DIR__.'/auth.php';
