@@ -2,7 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Vente;
+use App\Models\Commande;
+use App\Observers\VenteObserver;
+use App\Observers\CommandeObserver;
 use Illuminate\Support\ServiceProvider;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Vente::observe(VenteObserver::class);
+        Commande::observe(CommandeObserver::class);
     }
+
 }
