@@ -16,7 +16,7 @@ class Produit extends Model
         'reference', 'nom_produit', 'slug', 'description', 'marque', 'categorie', 'image', 'is_active'
     ];
 
-    protected function articles(): HasMany
+    public function articles(): HasMany
     {
         return $this->hasMany(Article::class);
     }

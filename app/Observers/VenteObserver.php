@@ -12,7 +12,7 @@ class VenteObserver
 {
     public function creating(Vente $vente): void
     {
-        $article = Article::findOrFail($vente->id_article);
+        $article = Article::findOrFail($vente->article_id);
 
         // ✅ Vérification 1 : article expiré ?
         if ($article->est_expire) {
@@ -27,7 +27,8 @@ class VenteObserver
         }
 
         // ✅ Calcul du prix total automatique
-        $vente->prix = $article->prix_unitaire * $vente->quantite;
+        $vente->prix_unitaire = $article->prix_unitaire;
+        $vente->prix_total = $article->prix_unitaire * $vente->quantite;
     }
 
     public function created(Vente $vente): void
@@ -40,9 +41,9 @@ class VenteObserver
 
         // ✅ Vérifier si stock bas → envoyer notification
         if ($article->stock_bas) {
-            $admins = \App\Models\User::where('role', 'admin')->get();
-            foreach ($admins as $admin) {
-                $admin->notify(new StockBasNotification($article));
+            $users = \App\Models\User::query()->get();
+            foreach ($users as $user) {
+                $user->notify(new StockBasNotification($article));
             }
         }
 
@@ -58,4 +59,3 @@ class VenteObserver
         $vente->article->increment('quantite', $vente->quantite);
     }
 }
-

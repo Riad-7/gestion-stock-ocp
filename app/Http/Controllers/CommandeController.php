@@ -16,15 +16,21 @@ class CommandeController extends Controller
     {
         $commandes = Commande::with(['article.produit', 'fournisseur'])
             ->when($request->statut, fn ($q, $s) => $q->where('statut', $s))
-            ->when($request->fournisseur_id, fn ($q, $id) => $q->where('id_fournisseur', $id)
+            ->when($request->fournisseur_id, fn ($q, $id) => $q->where('fournisseur_id', $id)
             )
             ->latest()
             ->paginate(20)
             ->withQueryString();
 
         $fournisseurs = Fournisseur::orderBy('nom')->get();
+        $articles = Article::with('produit')->orderBy('id')->get();
+        $stats = [
+            'en_attente' => Commande::where('statut', 'en_attente')->count(),
+            'livree' => Commande::where('statut', 'livree')->count(),
+            'annulee' => Commande::where('statut', 'annulee')->count(),
+        ];
 
-        return view('commandes.index', compact('commandes', 'fournisseurs'));
+        return view('commandes.index', compact('commandes', 'fournisseurs', 'articles', 'stats'));
     }
 
     public function create()

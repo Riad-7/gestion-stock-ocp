@@ -1,17 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('create ventes') }}
-        </h2>
+        <div class="flex flex-col gap-2">
+            <h2 class="text-3xl font-semibold tracking-tight text-slate-950">Nouvelle vente</h2>
+            <p class="text-sm text-slate-500">Le formulaire de vente est disponible directement dans la page ventes.</p>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <!-- TODO: Ajouter le contenu specifique ici -->
-                    Vue create pour ventes
-                </div>
+    <div class="mx-auto max-w-3xl">
+        <div class="panel-soft p-8 text-center">
+            <h3 class="section-title">Passez par la page Ventes</h3>
+            <p class="mt-3 text-sm text-slate-500">Le formulaire complet et l'historique sont regroupes dans une seule interface.</p>
+            <div class="mt-6">
+                <a href="{{ route('ventes.index') }}" class="btn-primary">Ouvrir la page ventes</a>
             </div>
         </div>
     </div>

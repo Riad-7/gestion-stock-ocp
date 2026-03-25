@@ -3,30 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Commande;
 use App\Models\Produit;
 use App\Notifications\ActionNotification;
 use App\Notifications\StockBasNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class ArticleController extends Controller
+class ArticleFlowController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $articles = Article::with('produit')
             ->withSum('commandes as quantite_commandee', 'quantite')
-            ->when($request->search, fn ($q, $s) => $q->whereHas('produit', fn ($p) => $p->where('nom_produit', 'like', "%$s%")
-            )
-            )
-            ->when($request->statut, fn ($q, $s) => $q->where('statut', $s)
-            )
-            // Filtre : afficher seulement les articles en stock bas
-            ->when($request->stock_bas, fn ($q) => $q->whereColumn('quantite', '<', 'seuil_minimum')
-            )
-            ->orderByRaw('quantite < seuil_minimum DESC') // stock bas en premier
+            ->when($request->search, fn ($q, $s) => $q->whereHas(
+                'produit',
+                fn ($p) => $p->where('nom_produit', 'like', "%{$s}%")
+            ))
+            ->when($request->statut, fn ($q, $s) => $q->where('statut', $s))
+            ->when($request->stock_bas, fn ($q) => $q->whereColumn('quantite', '<', 'seuil_minimum'))
+            ->orderByRaw('quantite < seuil_minimum DESC')
             ->orderBy('date_expiration')
             ->paginate(20)
             ->withQueryString();
@@ -40,7 +36,7 @@ class ArticleController extends Controller
         $stats = [
             'stock_bas' => Article::whereColumn('quantite', '<', 'seuil_minimum')->count(),
             'expires' => Article::where('statut', 'expire')->count(),
-            'quantite_commandee' => (int) \App\Models\Commande::sum('quantite'),
+            'quantite_commandee' => (int) Commande::sum('quantite'),
         ];
 
         return view('articles.index', compact('articles', 'produits', 'stockBasArticles', 'stats'));
@@ -48,7 +44,6 @@ class ArticleController extends Controller
 
     public function create()
     {
-        // Passer la liste des produits pour le select
         $produits = Produit::orderBy('nom_produit')->get();
 
         return view('articles.create', compact('produits'));
@@ -69,7 +64,7 @@ class ArticleController extends Controller
 
         if (empty($validated['produit_id']) && empty($validated['nom_produit'])) {
             return back()
-                ->withErrors(['nom_produit' => 'Le nom du produit est obligatoire si aucun produit n\'est selectionne.'])
+                ->withErrors(['nom_produit' => 'Le nom du produit est obligatoire si aucun produit n est selectionne.'])
                 ->withInput();
         }
 
@@ -102,7 +97,8 @@ class ArticleController extends Controller
         $warning = $this->notifyLowStockIfNeeded($request, $article);
 
         return redirect()->route('articles.index')
-            ->with('success', 'Article ajouté au stock !');
+            ->with('success', 'Article ajoute au stock.')
+            ->with('warning', $warning);
     }
 
     public function show(Article $article)
@@ -132,13 +128,52 @@ class ArticleController extends Controller
             'date_fabrication' => 'nullable|date',
             'date_expiration' => 'nullable|date|after_or_equal:date_fabrication',
             'statut' => 'required|in:actif,expire,epuise',
-            // Note : la quantite est gérée par les Observers, pas manuellement
         ]);
 
         $article->update($validated);
 
+        $request->user()?->notify(new ActionNotification(
+            'Article mis a jour.',
+            'info'
+        ));
+
+        $warning = $this->notifyLowStockIfNeeded($request, $article->fresh());
+
         return redirect()->route('articles.show', $article)
-            ->with('success', 'Article mis à jour !');
+            ->with('success', 'Article mis a jour.')
+            ->with('warning', $warning);
+    }
+
+    public function updateStatut(Request $request, Article $article)
+    {
+        $validated = $request->validate([
+            'statut' => 'required|in:actif,expire,epuise',
+        ]);
+
+        if ($validated['statut'] === 'actif' && $article->est_expire) {
+            return back()->withErrors([
+                'error' => 'Impossible d activer un article deja expire.',
+            ]);
+        }
+
+        if ($validated['statut'] === 'actif' && $article->quantite === 0) {
+            return back()->withErrors([
+                'error' => 'Impossible d activer un article avec un stock nul.',
+            ]);
+        }
+
+        $article->update(['statut' => $validated['statut']]);
+
+        $request->user()?->notify(new ActionNotification(
+            "Statut de l article change en {$validated['statut']}.",
+            $validated['statut'] === 'actif' ? 'success' : 'warning'
+        ));
+
+        $warning = $this->notifyLowStockIfNeeded($request, $article->fresh());
+
+        return redirect()->route('articles.index')
+            ->with('success', 'Statut de l article mis a jour.')
+            ->with('warning', $warning);
     }
 
     public function destroy(Article $article)
@@ -151,13 +186,24 @@ class ArticleController extends Controller
 
         if ($article->commandes()->count() > 0) {
             return back()->withErrors([
-                'error' => 'Impossible : cet article est lié à des commandes.',
+                'error' => 'Impossible : cet article est lie a des commandes.',
             ]);
         }
 
         $article->delete();
 
         return redirect()->route('articles.index')
-            ->with('success', 'Article supprimé du stock.');
+            ->with('success', 'Article supprime du stock.');
+    }
+
+    private function notifyLowStockIfNeeded(Request $request, Article $article): ?string
+    {
+        if (! $article->stock_bas) {
+            return null;
+        }
+
+        $request->user()?->notify(new StockBasNotification($article));
+
+        return "Quantite faible pour {$article->produit?->nom_produit}: {$article->quantite} restante(s), seuil minimum {$article->seuil_minimum}.";
     }
 }

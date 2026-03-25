@@ -57,10 +57,9 @@ class DashboardController extends Controller
         // ── Notifications non lues ─────────────────────
         $notifications = auth()->user()->unreadNotifications->take(5);
 
-        return view('dashboard', compact(
+        return view('dashboard-modern', compact(
             'data', 'articles_stock_bas', 'articles_expires',
             'ventes_recentes', 'notifications'
         ));
     }
 }
-

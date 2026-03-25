@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Vente;
 use App\Models\Article;
 use App\Models\Client;
-use Illuminate\Support\Facades\DB;
+use App\Models\Vente;
+use App\Notifications\ActionNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VenteController extends Controller
 {
@@ -16,7 +17,7 @@ class VenteController extends Controller
     public function index(Request $request)
     {
         $ventes = Vente::with(['article.produit', 'client'])
-            ->when($request->client_id, fn ($q, $id) => $q->where('id_client', $id)
+            ->when($request->client_id, fn ($q, $id) => $q->where('client_id', $id)
             )
             ->when($request->date_debut, fn ($q, $d) => $q->whereDate('date_vente', '>=', $d)
             )
@@ -27,11 +28,16 @@ class VenteController extends Controller
             ->withQueryString();
 
         $clients = Client::orderBy('nom')->get();
-        $totalCA = Vente::sum('prix');
-        $ventesJour = Vente::whereDate('date_vente', today())->sum('prix');
+        $articles = Article::with('produit')
+            ->where('statut', 'actif')
+            ->where('quantite', '>', 0)
+            ->orderBy('id')
+            ->get();
+        $totalCA = Vente::sum('prix_total');
+        $ventesJour = Vente::whereDate('date_vente', today())->sum('prix_total');
 
         return view('ventes.index',
-            compact('ventes', 'clients', 'totalCA', 'ventesJour')
+            compact('ventes', 'clients', 'articles', 'totalCA', 'ventesJour')
         );
     }
 
@@ -51,18 +57,33 @@ class VenteController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_article' => 'required|exists:articles,id',
-            'id_client' => 'required|exists:clients,id',
+            'article_id' => 'required|exists:articles,id',
+            'client_id' => 'required|exists:clients,id',
             'quantite' => 'required|integer|min:1',
+            'mode_paiement' => 'required|in:especes,carte,cheque,virement',
         ]);
 
         try {
             DB::transaction(function () use ($validated) {
+                $article = Article::findOrFail($validated['article_id']);
+
                 Vente::create([
-                    ...$validated,
+                    'article_id' => $validated['article_id'],
+                    'client_id' => $validated['client_id'],
+                    'quantite' => $validated['quantite'],
+                    'prix_unitaire' => $article->prix_unitaire,
+                    'prix_total' => $article->prix_unitaire * $validated['quantite'],
                     'date_vente' => now(),
+                    'mode_paiement' => $validated['mode_paiement'],
+                    'reference_facture' => 'VNT-'.strtoupper(uniqid()),
+                    'statut' => 'payee',
                 ]);
             });
+
+            $request->user()?->notify(new ActionNotification(
+                'Nouvelle vente enregistree avec succes.',
+                'success'
+            ));
 
             return redirect()->route('ventes.index')
                 ->with('success', 'Vente enregistrée avec succès !');
@@ -86,6 +107,11 @@ class VenteController extends Controller
         DB::transaction(function () use ($vente) {
             $vente->delete(); // l'Observer VenteObserver::deleted() remet le stock
         });
+
+        request()->user()?->notify(new ActionNotification(
+            'Vente annulee et stock restaure.',
+            'warning'
+        ));
 
         return redirect()->route('ventes.index')
             ->with('success', 'Vente annulée. Stock restauré.');
