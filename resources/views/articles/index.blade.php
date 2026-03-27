@@ -6,14 +6,14 @@
         </div>
     </x-slot>
 
-    <div class="grid gap-6 xl:grid-cols-[0.98fr_1.02fr]">
+    <div class="grid gap-6 xl:grid-cols-[0.82fr_1.18fr] 2xl:grid-cols-[0.78fr_1.22fr]">
         <section class="panel-soft p-6 sm:p-8">
             <div class="mb-6">
                 <h3 class="section-title">Formulaire article</h3>
                 <p class="section-copy">Vous pouvez selectionner un produit existant ou taper un nouveau nom de produit/article.</p>
             </div>
 
-            <form method="POST" action="{{ route('articles.store') }}" class="grid gap-5 md:grid-cols-2">
+            <form method="POST" action="{{ route('articles.store') }}" class="grid gap-4 md:grid-cols-2">
                 @csrf
 
                 <div class="md:col-span-2">
@@ -81,27 +81,66 @@
             </form>
         </section>
 
-        <section class="space-y-6">
-            <div class="grid gap-4 md:grid-cols-3">
-                <div class="stat-card">
-                    <p class="stat-kicker">Stock bas</p>
-                    <p class="stat-value">{{ $stats['stock_bas'] }}</p>
-                    <p class="stat-copy">Articles sous le seuil minimal.</p>
+        <section class="panel-soft overflow-hidden xl:min-w-0">
+            <div class="border-b border-slate-200 px-6 py-6 sm:px-8">
+                <div class="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+                    <div>
+                        <h3 class="section-title">Liste des articles</h3>
+                        <p class="section-copy">Changez l etat de chaque article et suivez les quantites commandees depuis le tableau.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3 text-sm xl:max-w-[24rem] xl:justify-end">
+                        <span class="badge-soft badge-warn">Stock bas: {{ $stats['stock_bas'] }}</span>
+                        <span class="badge-soft badge-danger">Expires: {{ $stats['expires'] }}</span>
+                        <span class="badge-soft badge-info">Qte commandee: {{ $stats['quantite_commandee'] }}</span>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <p class="stat-kicker">Articles expires</p>
-                    <p class="stat-value">{{ $stats['expires'] }}</p>
-                    <p class="stat-copy">Statut expire a surveiller.</p>
-                </div>
-                <div class="stat-card">
-                    <p class="stat-kicker">Quantite commandee</p>
-                    <p class="stat-value">{{ $stats['quantite_commandee'] }}</p>
-                    <p class="stat-copy">Total des quantites commandees.</p>
-                </div>
+
+                <form method="GET" action="{{ route('articles.index') }}" class="mt-6 grid gap-4">
+                    <div>
+                        <label for="search_articles" class="block text-sm font-medium text-slate-700">Recherche</label>
+                        <input
+                            id="search_articles"
+                            name="search"
+                            type="text"
+                            value="{{ request('search') }}"
+                            placeholder="Nom ou reference du produit"
+                            class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700"
+                            @input.debounce.400ms="$el.form.requestSubmit()"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="filtre_statut" class="block text-sm font-medium text-slate-700">Filtrer par etat</label>
+                        <select id="filtre_statut" name="statut" class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700" @change="$el.form.requestSubmit()">
+                            <option value="">Tous les etats</option>
+                            <option value="actif" @selected(request('statut') === 'actif')>Actif</option>
+                            <option value="expire" @selected(request('statut') === 'expire')>Expire</option>
+                            <option value="epuise" @selected(request('statut') === 'epuise')>Epuise</option>
+                        </select>
+                    </div>
+
+                    <label class="flex min-h-[3.5rem] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                        <input
+                            type="checkbox"
+                            name="stock_bas"
+                            value="1"
+                            @checked(request('stock_bas'))
+                            class="rounded border-slate-300 text-slate-900 focus:ring-cyan-400"
+                            @change="$el.form.requestSubmit()"
+                        >
+                        Stock bas seulement
+                    </label>
+
+                    <div class="flex flex-wrap gap-3">
+                        @if(request('statut') || request('search') || request('stock_bas'))
+                            <a href="{{ route('articles.index') }}" class="btn-secondary">Reinitialiser</a>
+                        @endif
+                    </div>
+                </form>
             </div>
 
             @if($stockBasArticles->isNotEmpty())
-                <div class="panel-soft border border-amber-200 bg-amber-50/70 p-6">
+                <div class="border-b border-amber-200 bg-amber-50/70 px-6 py-5">
                     <div class="flex items-start justify-between gap-4">
                         <div>
                             <h3 class="section-title text-amber-900">Alertes stock minimal</h3>
@@ -121,27 +160,26 @@
                 </div>
             @endif
 
-            <div class="panel-soft overflow-hidden">
-                <div class="border-b border-slate-200 px-6 py-5">
-                    <h3 class="section-title">Liste des articles</h3>
-                    <p class="section-copy">Changez l etat de chaque article et suivez les quantites commandees depuis le tableau.</p>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Article / produit</th>
-                                <th>Stock</th>
-                                <th>Quantite commandee</th>
-                                <th>Seuil min</th>
-                                <th>Etat</th>
-                                <th>Prix</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($articles as $article)
-                                <tr>
+            <div class="overflow-x-auto">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Article / produit</th>
+                            <th>Stock</th>
+                            <th>Quantite commandee</th>
+                            <th>Seuil min</th>
+                            <th>Etat</th>
+                            <th>Prix</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($articles as $article)
+                            <tr
+                                x-data="{ deleting: false, removed: false }"
+                                x-show="!removed"
+                                x-transition.opacity.duration.200ms
+                            >
                                     <td class="font-medium text-slate-900">
                                         <div>{{ $article->produit?->nom_produit ?? 'Produit non defini' }}</div>
                                         @if($article->date_expiration)
@@ -175,19 +213,87 @@
                                         </form>
                                     </td>
                                     <td>{{ number_format($article->prix_unitaire, 2) }} DH</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-500">Aucun article enregistre.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                                    <td>
+                                        <div class="min-w-[8rem] space-y-2">
+                                        <details class="group">
+                                            <summary class="cursor-pointer list-none rounded-full border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">
+                                                Ajouter stock
+                                            </summary>
 
-                <div class="px-6 py-4">
-                    {{ $articles->links() }}
-                </div>
+                                            <form method="POST" action="{{ route('articles.restock', $article) }}" class="mt-3 w-[10rem] space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                                                @csrf
+                                                @method('PATCH')
+
+                                                <div>
+                                                    <label for="quantite_ajout_{{ $article->id }}" class="block text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                                                        Quantite a ajouter
+                                                    </label>
+                                                    <input
+                                                        id="quantite_ajout_{{ $article->id }}"
+                                                        name="quantite_ajout"
+                                                        type="number"
+                                                        min="1"
+                                                        value="1"
+                                                        class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                                                        required
+                                                    >
+                                                </div>
+
+                                                <button type="submit" class="btn-primary w-full">
+                                                    Valider
+                                                </button>
+                                            </form>
+                                        </details>
+                                            <form
+                                                method="POST"
+                                                action="{{ route('articles.destroy', $article) }}"
+                                                @submit.prevent="
+                                                    if (!confirm('Voulez-vous vraiment supprimer cet article ?')) return;
+                                                    deleting = true;
+                                                    fetch($el.action, {
+                                                        method: 'POST',
+                                                        headers: {
+                                                            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                                            'X-Requested-With': 'XMLHttpRequest',
+                                                            'Accept': 'application/json'
+                                                        },
+                                                        body: new FormData($el)
+                                                    })
+                                                    .then(async (response) => {
+                                                        const data = await response.json().catch(() => ({}));
+                                                        if (!response.ok) {
+                                                            throw new Error(data.message || 'Suppression impossible.');
+                                                        }
+                                                        removed = true;
+                                                    })
+                                                    .catch((error) => {
+                                                        deleting = false;
+                                                        alert(error.message || 'Suppression impossible.');
+                                                    });
+                                                "
+                                            >
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" :disabled="deleting" class="w-full rounded-full border border-rose-200 bg-rose-50 px-2.5 py-1.5 text-xs font-medium text-rose-600 transition hover:border-rose-300 hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-60">
+                                                    <span x-show="!deleting">Supprimer</span>
+                                                    <span x-show="deleting" x-cloak>Suppression...</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="px-6 py-10 text-center text-sm text-slate-500">Aucun article enregistre.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="px-6 py-4">
+                {{ $articles->links() }}
             </div>
         </section>
     </div>

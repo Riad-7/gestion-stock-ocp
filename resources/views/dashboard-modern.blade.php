@@ -84,6 +84,17 @@
                     <span class="badge-soft badge-info">Suivi</span>
                 </div>
             </div>
+
+            <div class="stat-card lg:col-span-3">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="stat-kicker">Operations aujourd'hui</p>
+                        <p class="stat-value">{{ $data['operations_today'] }}</p>
+                        <p class="stat-copy">Actions enregistrees dans l historique du jour.</p>
+                    </div>
+                    <span class="badge-soft badge-info">Journal</span>
+                </div>
+            </div>
         </section>
 
         <section class="grid gap-5 xl:grid-cols-12">
@@ -107,7 +118,7 @@
 
                     <div class="rounded-3xl bg-gradient-to-br from-cyan-500 to-sky-700 p-6 text-white shadow-xl shadow-cyan-900/20">
                         <p class="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-50">Chiffre d'affaires</p>
-                        <p class="mt-4 text-4xl font-semibold">{{ number_format($data['ca_jour'], 2) }} DH</p>
+                        <p class="mt-4 text-4xl font-semibold">{{ $data['ca_jour'] }} DH</p>
                         <p class="mt-2 text-sm text-cyan-50/90">Montant cumule realise sur la journee.</p>
                     </div>
                 </div>
@@ -142,6 +153,22 @@
                         <div class="flex items-center justify-between">
                             <span class="text-sm font-medium text-slate-600">Notifications actives</span>
                             <span class="text-sm font-semibold text-slate-900">{{ $notifications->count() }}</span>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl bg-slate-50 px-4 py-4">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="text-sm font-medium text-slate-600">Dernier backup</span>
+                                @if($latestBackup)
+                                    <p class="mt-1 text-sm font-semibold text-slate-900">{{ $latestBackup['updated_at']->format('d/m/Y H:i') }}</p>
+                                    <p class="mt-1 text-xs text-slate-500">{{ $latestBackup['name'] }} · {{ number_format($latestBackup['size_kb'], 2) }} KB</p>
+                                @else
+                                    <p class="mt-1 text-sm font-semibold text-slate-900">Aucun backup</p>
+                                    <p class="mt-1 text-xs text-slate-500">Lance un backup depuis l historique.</p>
+                                @endif
+                            </div>
+                            <span class="badge-soft badge-info">{{ $latestBackup ? 'OK' : 'Vide' }}</span>
                         </div>
                     </div>
 

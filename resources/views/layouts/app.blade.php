@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        @include('layouts.partials.page-meta')
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
@@ -48,7 +48,7 @@
                         x-show="successOpen"
                         x-init="setTimeout(() => successOpen = false, 4500)"
                         x-transition
-                        class="toast-popup pointer-events-auto border-emerald-200/80 bg-emerald-50/95 text-emerald-900"
+                        class="toast-popup border-emerald-200/80 bg-emerald-50/95 text-emerald-900"
                     >
                         <div class="flex items-start gap-3">
                             <span class="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">OK</span>
@@ -66,7 +66,7 @@
                         x-show="warningOpen"
                         x-init="setTimeout(() => warningOpen = false, 5500)"
                         x-transition
-                        class="toast-popup pointer-events-auto border-amber-200/80 bg-amber-50/95 text-amber-900"
+                        class="toast-popup border-amber-200/80 bg-amber-50/95 text-amber-900"
                     >
                         <div class="flex items-start gap-3">
                             <span class="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-700">!</span>
@@ -84,7 +84,7 @@
                         x-show="errorOpen"
                         x-init="setTimeout(() => errorOpen = false, 6500)"
                         x-transition
-                        class="toast-popup pointer-events-auto border-rose-200/80 bg-rose-50/95 text-rose-900"
+                        class="toast-popup border-rose-200/80 bg-rose-50/95 text-rose-900"
                     >
                         <div class="flex items-start gap-3">
                             <span class="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose-100 text-sm font-bold text-rose-700">!</span>

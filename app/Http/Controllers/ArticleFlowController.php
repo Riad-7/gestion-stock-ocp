@@ -7,7 +7,9 @@ use App\Models\Commande;
 use App\Models\Produit;
 use App\Notifications\ActionNotification;
 use App\Notifications\StockBasNotification;
+use App\Support\ActionLogger;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ArticleFlowController extends Controller
@@ -16,10 +18,12 @@ class ArticleFlowController extends Controller
     {
         $articles = Article::with('produit')
             ->withSum('commandes as quantite_commandee', 'quantite')
-            ->when($request->search, fn ($q, $s) => $q->whereHas(
-                'produit',
-                fn ($p) => $p->where('nom_produit', 'like', "%{$s}%")
-            ))
+            ->when($request->search, function ($q, $s) {
+                $q->whereHas('produit', function ($p) use ($s) {
+                    $p->where('nom_produit', 'like', "%{$s}%")
+                        ->orWhere('reference', 'like', "%{$s}%");
+                });
+            })
             ->when($request->statut, fn ($q, $s) => $q->where('statut', $s))
             ->when($request->stock_bas, fn ($q) => $q->whereColumn('quantite', '<', 'seuil_minimum'))
             ->orderByRaw('quantite < seuil_minimum DESC')
@@ -89,6 +93,14 @@ class ArticleFlowController extends Controller
 
         $article = Article::create($validated);
 
+        ActionLogger::log(
+            'article.create',
+            "Article {$article->produit?->nom_produit} ajoute au stock.",
+            $article,
+            ['statut' => $article->statut, 'quantite' => $article->quantite],
+            $request,
+        );
+
         $request->user()?->notify(new ActionNotification(
             'Nouvel article ajoute au stock.',
             'success'
@@ -132,6 +144,14 @@ class ArticleFlowController extends Controller
 
         $article->update($validated);
 
+        ActionLogger::log(
+            'article.update',
+            "Article {$article->produit?->nom_produit} mis a jour.",
+            $article,
+            ['statut' => $article->statut, 'prix_unitaire' => $article->prix_unitaire],
+            $request,
+        );
+
         $request->user()?->notify(new ActionNotification(
             'Article mis a jour.',
             'info'
@@ -164,6 +184,14 @@ class ArticleFlowController extends Controller
 
         $article->update(['statut' => $validated['statut']]);
 
+        ActionLogger::log(
+            'article.status',
+            "Statut de l article {$article->produit?->nom_produit} change en {$validated['statut']}.",
+            $article,
+            ['statut' => $validated['statut']],
+            $request,
+        );
+
         $request->user()?->notify(new ActionNotification(
             "Statut de l article change en {$validated['statut']}.",
             $validated['statut'] === 'actif' ? 'success' : 'warning'
@@ -176,21 +204,82 @@ class ArticleFlowController extends Controller
             ->with('warning', $warning);
     }
 
+    public function restock(Request $request, Article $article)
+    {
+        $validated = $request->validate([
+            'quantite_ajout' => 'required|integer|min:1|max:100000',
+        ]);
+
+        DB::transaction(function () use ($article, $validated) {
+            $article->increment('quantite', $validated['quantite_ajout']);
+            $article->refresh();
+
+            if ($article->statut === 'epuise' && ! $article->est_expire && $article->quantite > 0) {
+                $article->update(['statut' => 'actif']);
+            }
+        });
+
+        $article->refresh();
+
+        ActionLogger::log(
+            'article.restock',
+            "Stock ajoute pour {$article->produit?->nom_produit}.",
+            $article,
+            ['quantite_ajout' => $validated['quantite_ajout'], 'quantite_totale' => $article->quantite],
+            $request,
+        );
+
+        $request->user()?->notify(new ActionNotification(
+            "Stock ajoute pour {$article->produit?->nom_produit}: +{$validated['quantite_ajout']} unites.",
+            'success'
+        ));
+
+        $warning = $this->notifyLowStockIfNeeded($request, $article);
+
+        return redirect()->route('articles.index')
+            ->with('success', "Stock mis a jour: +{$validated['quantite_ajout']} unites ajoutees.")
+            ->with('warning', $warning);
+    }
+
     public function destroy(Article $article)
     {
+        $article->loadMissing('produit');
+
         if ($article->ventes()->count() > 0) {
-            return back()->withErrors([
-                'error' => "Impossible : cet article a {$article->ventes()->count()} vente(s).",
-            ]);
+            $message = "Impossible : cet article a {$article->ventes()->count()} vente(s).";
+
+            return request()->expectsJson()
+                ? response()->json(['message' => $message], 422)
+                : back()->withErrors(['error' => $message]);
         }
 
         if ($article->commandes()->count() > 0) {
-            return back()->withErrors([
-                'error' => 'Impossible : cet article est lie a des commandes.',
-            ]);
+            $message = 'Impossible : cet article est lie a des commandes.';
+
+            return request()->expectsJson()
+                ? response()->json(['message' => $message], 422)
+                : back()->withErrors(['error' => $message]);
         }
 
-        $article->delete();
+        $articleName = $article->produit?->nom_produit ?? 'Article';
+        $request = request();
+
+        $article->forceDelete();
+
+        ActionLogger::log(
+            'article.delete',
+            "Article {$articleName} supprime du stock.",
+            null,
+            ['article_id' => $article->id, 'nom_produit' => $articleName],
+            $request,
+        );
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Article supprime du stock.',
+                'article_id' => $article->id,
+            ]);
+        }
 
         return redirect()->route('articles.index')
             ->with('success', 'Article supprime du stock.');

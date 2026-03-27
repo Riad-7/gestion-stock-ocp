@@ -1,18 +1,25 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('show commandes') }}
-        </h2>
+        <div class="flex flex-col gap-2">
+            <h2 class="text-3xl font-semibold tracking-tight text-slate-950">Facture commande</h2>
+            <p class="text-sm text-slate-500">Apercu imprimable de la commande fournisseur.</p>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <!-- TODO: Ajouter le contenu specifique ici -->
-                    Vue show pour commandes
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('partials.print-ticket', [
+        'documentTitle' => 'Facture commande',
+        'documentDate' => $commande->date_commande,
+        'partyLabel' => 'Fournisseur',
+        'party' => $commande->fournisseur,
+        'reference' => $commande->reference_commande,
+        'statusLabel' => ucfirst(str_replace('_', ' ', $commande->statut ?? 'en_attente')),
+        'paymentLabel' => null,
+        'itemName' => $commande->article?->produit?->nom_produit ?? 'Article',
+        'quantity' => $commande->quantite,
+        'unitPrice' => $commande->prix_unitaire,
+        'totalPrice' => $commande->prix_total,
+        'backUrl' => route('commandes.index'),
+        'pdfUrl' => route('commandes.pdf', $commande),
+        'footerNote' => 'Document de commande',
+    ])
 </x-app-layout>

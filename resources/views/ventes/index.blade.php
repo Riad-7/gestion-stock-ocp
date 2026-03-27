@@ -76,6 +76,60 @@
                         <span class="badge-soft badge-warn">Jour: {{ number_format($ventesJour, 2) }} DH</span>
                     </div>
                 </div>
+
+                <form method="GET" action="{{ route('ventes.index') }}" class="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-end">
+                    <div>
+                        <label for="search_ventes" class="block text-sm font-medium text-slate-700">Recherche</label>
+                        <input
+                            id="search_ventes"
+                            name="search"
+                            type="text"
+                            value="{{ request('search') }}"
+                            placeholder="Reference, article ou client"
+                            class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="filtre_client" class="block text-sm font-medium text-slate-700">Client</label>
+                        <select id="filtre_client" name="client_id" class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700">
+                            <option value="">Tous les clients</option>
+                            @foreach($clients as $client)
+                                <option value="{{ $client->id }}" @selected((string) request('client_id') === (string) $client->id)>
+                                    {{ $client->nom }} {{ $client->prenom }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="filtre_mode_paiement" class="block text-sm font-medium text-slate-700">Paiement</label>
+                        <select id="filtre_mode_paiement" name="mode_paiement" class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700">
+                            <option value="">Tous les modes</option>
+                            <option value="especes" @selected(request('mode_paiement') === 'especes')>Especes</option>
+                            <option value="carte" @selected(request('mode_paiement') === 'carte')>Carte</option>
+                            <option value="cheque" @selected(request('mode_paiement') === 'cheque')>Cheque</option>
+                            <option value="virement" @selected(request('mode_paiement') === 'virement')>Virement</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="date_debut_vente" class="block text-sm font-medium text-slate-700">Date debut</label>
+                        <input id="date_debut_vente" name="date_debut" type="date" value="{{ request('date_debut') }}" class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700">
+                    </div>
+
+                    <div>
+                        <label for="date_fin_vente" class="block text-sm font-medium text-slate-700">Date fin</label>
+                        <input id="date_fin_vente" name="date_fin" type="date" value="{{ request('date_fin') }}" class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700">
+                    </div>
+
+                    <div class="flex flex-wrap gap-3">
+                        <button type="submit" class="btn-primary">Filtrer</button>
+                        @if(request('search') || request('client_id') || request('mode_paiement') || request('date_debut') || request('date_fin'))
+                            <a href="{{ route('ventes.index') }}" class="btn-secondary">Reinitialiser</a>
+                        @endif
+                    </div>
+                </form>
             </div>
 
             <div class="overflow-x-auto">
@@ -87,6 +141,7 @@
                             <th>Quantite</th>
                             <th>Total</th>
                             <th>Paiement</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,10 +152,13 @@
                                 <td>{{ $vente->quantite }}</td>
                                 <td>{{ number_format($vente->prix_total, 2) }} DH</td>
                                 <td>{{ ucfirst($vente->mode_paiement) }}</td>
+                                <td>
+                                    <a href="{{ route('ventes.show', $vente) }}" class="btn-secondary">Facture</a>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-10 text-center text-sm text-slate-500">Aucune vente enregistree.</td>
+                                <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-500">Aucune vente enregistree.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -110,6 +168,6 @@
             <div class="px-6 py-4">
                 {{ $ventes->links() }}
             </div>
-        </div>
+        </section>
     </div>
 </x-app-layout>

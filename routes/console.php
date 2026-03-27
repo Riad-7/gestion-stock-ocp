@@ -8,11 +8,14 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// Exécuter chaque nuit à minuit
 Schedule::command('stock:verifier-expirations')
-         ->dailyAt('00:00')
-         ->withoutOverlapping()   // évite les doublons
-         ->sendOutputTo(storage_path('logs/expirations.log'));
+    ->dailyAt('00:00')
+    ->withoutOverlapping()
+    ->sendOutputTo(storage_path('logs/expirations.log'));
 
-// Ajouter d'autres tâches planifiées :
+Schedule::command('backup:database')
+    ->dailyAt('01:00')
+    ->withoutOverlapping()
+    ->appendOutputTo(storage_path('logs/database-backup.log'));
+
 Schedule::command('queue:prune-failed')->weekly();

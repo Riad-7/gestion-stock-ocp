@@ -1,0 +1,285 @@
+<mxfile host="65bd71144e">
+    <diagram id="CYkylSbbOykQjtaeLJ6r" name="Page-1">
+        <mxGraphModel dx="519" dy="311" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1400" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="actor1" value="Administrateur" style="shape=mxgraph.uml.actor;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="30" width="40" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll1" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="70" y="90" as="sourcePoint"/>
+                        <mxPoint x="70" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="actor2" value="UI Commandes" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="170" y="30" width="110" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll2" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="225" y="70" as="sourcePoint"/>
+                        <mxPoint x="225" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="actor3" value="ControleurCommandes" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="30" width="150" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll3" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="435" y="70" as="sourcePoint"/>
+                        <mxPoint x="435" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="actor4" value="ServiceCommande" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="30" width="130" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll4" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="625" y="70" as="sourcePoint"/>
+                        <mxPoint x="625" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="actor5" value="Commande" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="720" y="30" width="90" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll5" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="765" y="70" as="sourcePoint"/>
+                        <mxPoint x="765" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="actor6" value="LigneCommande" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="830" y="30" width="110" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll6" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="885" y="70" as="sourcePoint"/>
+                        <mxPoint x="885" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="actor7" value="Article" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="30" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll7" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1000" y="70" as="sourcePoint"/>
+                        <mxPoint x="1000" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="actor8" value="Mouvement" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="30" width="90" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll8" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1105" y="70" as="sourcePoint"/>
+                        <mxPoint x="1105" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="actor9" value="Facture" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1170" y="30" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll9" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1210" y="70" as="sourcePoint"/>
+                        <mxPoint x="1210" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="actor10" value="LigneFacture" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1270" y="30" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll10" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1320" y="70" as="sourcePoint"/>
+                        <mxPoint x="1320" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="actor11" value="Fournisseur" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1390" y="30" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll11" value="" style="endArrow=none;dashed=1;strokeColor=#000000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1440" y="70" as="sourcePoint"/>
+                        <mxPoint x="1440" y="1350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m1" value="1: Cliquer sur &quot;Marquer comme livrée&quot;" style="endArrow=open;endFill=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="70" y="120" as="sourcePoint"/>
+                        <mxPoint x="225" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m2" value="2: POST /commandes/{id}/livrer" style="endArrow=open;endFill=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="225" y="155" as="sourcePoint"/>
+                        <mxPoint x="435" y="155" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m3" value="3: livrerCommande(commandeId)" style="endArrow=open;endFill=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="435" y="190" as="sourcePoint"/>
+                        <mxPoint x="625" y="190" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m4" value="4: findById(commandeId)" style="endArrow=open;endFill=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="625" y="225" as="sourcePoint"/>
+                        <mxPoint x="765" y="225" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m5" value="5: commande" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="765" y="250" as="sourcePoint"/>
+                        <mxPoint x="625" y="250" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m6" value="6: vérifier statut == en_attente" style="endArrow=open;endFill=1;html=1;exitX=1;exitY=0;entryX=1;entryY=0;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="625" y="275" as="sourcePoint"/>
+                        <mxPoint x="625" y="305" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="670" y="275"/>
+                            <mxPoint x="670" y="305"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m7" value="7: findByCommande(commandeId)" style="endArrow=open;endFill=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="625" y="330" as="sourcePoint"/>
+                        <mxPoint x="885" y="330" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m8" value="8: listelignes" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="885" y="355" as="sourcePoint"/>
+                        <mxPoint x="625" y="355" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="loop1" value="loop" style="swimlane;startSize=20;swimlaneLine=1;fillColor=none;strokeColor=#000000;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="370" width="900" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="loop1label" value="[pour chaque ligneCommande]" style="text;html=1;align=left;" parent="loop1" vertex="1">
+                    <mxGeometry x="60" y="4" width="250" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="m9" value="9: findById(ligne.article_id)" style="endArrow=open;endFill=1;html=1;" parent="loop1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="35" y="45" as="sourcePoint"/>
+                        <mxPoint x="410" y="45" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m10" value="10: article" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="loop1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="410" y="70" as="sourcePoint"/>
+                        <mxPoint x="35" y="70" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m11" value="11: article.quantite += ligne.quantite&#xa;save()" style="endArrow=open;endFill=1;html=1;" parent="loop1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="35" y="100" as="sourcePoint"/>
+                        <mxPoint x="410" y="100" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m12" value="12: ok" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="loop1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="410" y="130" as="sourcePoint"/>
+                        <mxPoint x="35" y="130" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m13" value="13: create(&#xa;type = &quot;entree&quot;,&#xa;article_id,&#xa;quantite,&#xa;fournisseur_id = commande.fournisseur_id,&#xa;commande_id,&#xa;date_mouvement = aujourd&#39;hui&#xa;)" style="endArrow=open;endFill=1;html=1;" parent="loop1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="35" y="155" as="sourcePoint"/>
+                        <mxPoint x="515" y="155" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m14" value="14: mouvement créé" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="loop1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="515" y="205" as="sourcePoint"/>
+                        <mxPoint x="35" y="205" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m15" value="15: calculer total_ht, tva, total_ttc" style="endArrow=open;endFill=1;html=1;exitX=1;exitY=0;entryX=1;entryY=0;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="625" y="625" as="sourcePoint"/>
+                        <mxPoint x="625" y="655" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="670" y="625"/>
+                            <mxPoint x="670" y="655"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m16" value="16: mettre à jour statut = &quot;livree&quot;,&#xa;date_livraison = aujourd&#39;hui,&#xa;totaux&#xa;save()" style="endArrow=open;endFill=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="625" y="680" as="sourcePoint"/>
+                        <mxPoint x="765" y="680" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m17" value="17: ok" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="765" y="730" as="sourcePoint"/>
+                        <mxPoint x="625" y="730" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m18" value="18: findById(commande.fournisseur_id)" style="endArrow=open;endFill=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="625" y="760" as="sourcePoint"/>
+                        <mxPoint x="1440" y="760" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m19" value="19: fournisseur" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1440" y="790" as="sourcePoint"/>
+                        <mxPoint x="625" y="790" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m20" value="20: create(&#xa;type = &quot;achat&quot;,&#xa;numero = générerNumero(),&#xa;fournisseur_id,&#xa;commande_id,&#xa;date_facture = aujourd&#39;hui,&#xa;total_ht, tva, total_ttc,&#xa;statut = &quot;validee&quot;&#xa;)" style="endArrow=open;endFill=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="625" y="820" as="sourcePoint"/>
+                        <mxPoint x="1210" y="820" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m21" value="21: facture" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1210" y="920" as="sourcePoint"/>
+                        <mxPoint x="625" y="920" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="loop2" value="loop" style="swimlane;startSize=20;swimlaneLine=1;fillColor=none;strokeColor=#000000;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="940" width="760" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="loop2label" value="[pour chaque ligneCommande]" style="text;html=1;align=left;" parent="loop2" vertex="1">
+                    <mxGeometry x="60" y="4" width="250" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="m22" value="22: create(&#xa;facture_id = facture.id,&#xa;article_id,&#xa;quantite,&#xa;prix_unitaire,&#xa;total = quantite * prix_unitaire&#xa;)" style="endArrow=open;endFill=1;html=1;" parent="loop2" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="35" y="60" as="sourcePoint"/>
+                        <mxPoint x="730" y="60" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m23" value="23: ligneFacture" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="loop2" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="730" y="120" as="sourcePoint"/>
+                        <mxPoint x="35" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m24" value="24: succès" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="625" y="1125" as="sourcePoint"/>
+                        <mxPoint x="435" y="1125" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m25" value="25: 200 OK + message &quot;Commande livrée,&#xa;stock mis à jour, facture générée&quot;" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="435" y="1160" as="sourcePoint"/>
+                        <mxPoint x="225" y="1160" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m26" value="26: Afficher message de succès&#xa;et mise à jour de la liste" style="endArrow=open;endFill=0;dashed=1;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="225" y="1200" as="sourcePoint"/>
+                        <mxPoint x="70" y="1200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -27,6 +27,7 @@
                             ['label' => 'Articles', 'route' => 'articles.index'],
                             ['label' => 'Ventes', 'route' => 'ventes.index'],
                             ['label' => 'Commandes', 'route' => 'commandes.index'],
+                            ['label' => 'Historique', 'route' => 'historique.index'],
                         ];
                     @endphp
 
@@ -171,7 +172,6 @@
                             </span>
                             <span class="hidden text-left md:block">
                                 <span class="block text-sm font-semibold text-slate-900">{{ Auth::user()->name }}</span>
-                                <span class="block text-xs text-slate-500">{{ Auth::user()->email }}</span>
                             </span>
                         </button>
                     </x-slot>
@@ -209,6 +209,7 @@
                 ['label' => 'Articles', 'route' => 'articles.index'],
                 ['label' => 'Ventes', 'route' => 'ventes.index'],
                 ['label' => 'Commandes', 'route' => 'commandes.index'],
+                ['label' => 'Historique', 'route' => 'historique.index'],
             ] as $link)
                 <a
                     href="{{ route($link['route']) }}"
@@ -220,7 +221,6 @@
 
             <div class="rounded-2xl border border-slate-200 bg-white p-4">
                 <p class="text-sm font-semibold text-slate-900">{{ Auth::user()->name }}</p>
-                <p class="mt-1 text-xs text-slate-500">{{ Auth::user()->email }}</p>
                 <div class="mt-4 flex gap-2">
                     <a href="{{ route('profile.edit') }}" class="btn-secondary flex-1">Profile</a>
                     <form method="POST" action="{{ route('logout') }}" class="flex-1">
