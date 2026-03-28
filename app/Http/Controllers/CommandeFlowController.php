@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Commande;
 use App\Models\Fournisseur;
+use App\Models\Produit;
 use App\Notifications\ActionNotification;
 use App\Support\AdminActionMailer;
 use App\Support\ActionLogger;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CommandeFlowController extends Controller
 {
@@ -35,42 +38,71 @@ class CommandeFlowController extends Controller
             ->withQueryString();
 
         $fournisseurs = Fournisseur::orderBy('nom')->get();
-        $articles = Article::with('produit')->orderBy('id')->get();
         $stats = [
             'en_attente' => Commande::where('statut', 'en_attente')->count(),
             'livree' => Commande::where('statut', 'livree')->count(),
             'annulee' => Commande::where('statut', 'annulee')->count(),
         ];
 
-        return view('commandes.index', compact('commandes', 'fournisseurs', 'articles', 'stats'));
+        return view('commandes.index', compact('commandes', 'fournisseurs', 'stats'));
     }
 
     public function create()
     {
-        $articles = Article::with('produit')->orderBy('id')->get();
         $fournisseurs = Fournisseur::orderBy('nom')->get();
 
-        return view('commandes.create', compact('articles', 'fournisseurs'));
+        return view('commandes.create', compact('fournisseurs'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'article_id' => 'required|exists:articles,id',
+            'nom_produit' => 'required|string|max:150',
             'fournisseur_id' => 'required|exists:fournisseurs,id',
             'quantite' => 'required|integer|min:1',
             'prix_unitaire' => 'required|numeric|min:0',
+            'seuil_minimum' => 'required|integer|min:0',
             'date_commande' => 'required|date',
             'date_livraison' => 'nullable|date|after_or_equal:date_commande',
+            'date_fabrication' => 'nullable|date',
+            'date_expiration' => 'nullable|date|after_or_equal:date_fabrication',
             'reference_commande' => 'nullable|string|max:255',
-            'statut' => 'required|in:en_attente,livree,annulee',
         ]);
 
-        $commande = Commande::create([
-            ...$validated,
-            'prix_total' => $validated['quantite'] * $validated['prix_unitaire'],
-            'reference_commande' => $validated['reference_commande'] ?: 'CMD-'.strtoupper(uniqid()),
-        ]);
+        $commande = DB::transaction(function () use ($validated) {
+            $produit = Produit::firstOrCreate(
+                ['nom_produit' => $validated['nom_produit']],
+                [
+                    'reference' => 'PRD-'.Str::upper(Str::random(8)),
+                    'description' => null,
+                    'marque' => null,
+                    'categorie' => null,
+                    'is_active' => true,
+                ]
+            );
+
+            $article = Article::create([
+                'produit_id' => $produit->id,
+                'quantite' => 0,
+                'seuil_minimum' => $validated['seuil_minimum'],
+                'prix_unitaire' => $validated['prix_unitaire'],
+                'date_fabrication' => $validated['date_fabrication'] ?? null,
+                'date_expiration' => $validated['date_expiration'] ?? null,
+                'statut' => 'epuise',
+            ]);
+
+            return Commande::create([
+                'article_id' => $article->id,
+                'fournisseur_id' => $validated['fournisseur_id'],
+                'quantite' => $validated['quantite'],
+                'prix_unitaire' => $validated['prix_unitaire'],
+                'prix_total' => $validated['quantite'] * $validated['prix_unitaire'],
+                'date_commande' => $validated['date_commande'],
+                'date_livraison' => $validated['date_livraison'] ?? null,
+                'reference_commande' => $validated['reference_commande'] ?: 'CMD-'.strtoupper(uniqid()),
+                'statut' => 'en_attente',
+            ]);
+        });
 
         $commande->loadMissing(['article.produit', 'fournisseur']);
 
@@ -103,7 +135,7 @@ class CommandeFlowController extends Controller
         ));
 
         return redirect()->route('commandes.index')
-            ->with('success', 'Commande creee et ajoutee au suivi.');
+            ->with('success', 'Commande creee. L article apparait dans le stock avec quantite 0 jusqu a la livraison.');
     }
 
     public function show(Commande $commande)

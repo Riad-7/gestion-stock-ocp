@@ -17,11 +17,17 @@ class ArticleFlowController extends Controller
     public function index(Request $request)
     {
         $articles = Article::with('produit')
-            ->withSum('commandes as quantite_commandee', 'quantite')
+            ->withSum([
+                'commandes as quantite_commandee' => fn ($query) => $query->where('statut', 'en_attente'),
+            ], 'quantite')
             ->when($request->search, function ($q, $s) {
-                $q->whereHas('produit', function ($p) use ($s) {
-                    $p->where('nom_produit', 'like', "%{$s}%")
-                        ->orWhere('reference', 'like', "%{$s}%");
+                $q->where(function ($query) use ($s) {
+                    $query->whereHas('produit', function ($p) use ($s) {
+                        $p->where('nom_produit', 'like', "%{$s}%")
+                            ->orWhere('reference', 'like', "%{$s}%");
+                    })->orWhereHas('commandes', function ($commande) use ($s) {
+                        $commande->where('reference_commande', 'like', "%{$s}%");
+                    });
                 });
             })
             ->when($request->statut, fn ($q, $s) => $q->where('statut', $s))
@@ -40,7 +46,7 @@ class ArticleFlowController extends Controller
         $stats = [
             'stock_bas' => Article::whereColumn('quantite', '<', 'seuil_minimum')->count(),
             'expires' => Article::where('statut', 'expire')->count(),
-            'quantite_commandee' => (int) Commande::sum('quantite'),
+            'quantite_commandee' => (int) Commande::where('statut', 'en_attente')->sum('quantite'),
         ];
 
         return view('articles.index', compact('articles', 'produits', 'stockBasArticles', 'stats'));
