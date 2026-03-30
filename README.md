@@ -4,6 +4,24 @@ Application web Laravel pour le suivi du stock, des ventes, des commandes fourni
 
 Ce document a ete prepare pour faciliter la prise en main par un responsable, un administrateur technique ou toute personne qui doit exploiter l'application apres livraison.
 
+## Nouveautes recentes
+
+Les derniers ajustements visibles dans le code du projet incluent:
+
+- nouvelle page d'accueil moderne via `welcome-modern`
+- nouveau dashboard moderne via `dashboard-modern`
+- acces au dashboard strictement protege par `auth` et `verified`
+- remplacement des anciens flux principaux par `ArticleFlowController` et `CommandeFlowController`
+- recherche des articles et des commandes enrichie avec plus de filtres metier
+- creation automatique d'un `produit` si l'utilisateur saisit seulement un nom de produit lors de l'ajout d'un article
+- lors de la creation d'une commande fournisseur, creation automatique d'un article associe avec quantite initiale `0` jusqu'a la livraison
+- blocage metier plus strict sur les statuts de commande: une commande `livree` ou `annulee` ne peut pas etre reactivee librement
+- ajout automatique de la `date_livraison` lors du passage a `livree`
+- restock manuel d'article avec reactivation automatique du statut `actif` si l'article etait `epuise`
+- suivi plus visible des commandes en attente dans les listes d'articles
+- renforcement des notifications utilisateur et des logs d'actions sur les operations articles / commandes
+- envoi d'un email admin lors de l'enregistrement d'une nouvelle commande fournisseur
+
 ## 1. Objectif du projet
 
 L'application permet de gerer un cycle simple de stock:
