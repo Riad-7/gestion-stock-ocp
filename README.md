@@ -1,4 +1,4 @@
-# GS Laravel - Application de gestion de stock
+# GS-OCP - Application de gestion de stock
 
 Application web Laravel pour le suivi du stock, des ventes, des commandes fournisseurs, des clients, des fournisseurs et de l'historique des actions.
 
