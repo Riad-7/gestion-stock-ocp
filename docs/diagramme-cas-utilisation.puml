@@ -1,0 +1,109 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+actor "Utilisateur" as User
+actor "Administrateur" as Admin
+actor "Planificateur Laravel" as Scheduler
+
+Admin --|> User
+
+rectangle "GS-OCP - Gestion de stock" {
+  usecase "S'authentifier" as UC_Login
+  usecase "Gerer profil" as UC_Profile
+  usecase "Consulter dashboard" as UC_Dashboard
+
+  usecase "Gerer clients" as UC_Clients
+  usecase "Gerer fournisseurs" as UC_Fournisseurs
+
+  usecase "Consulter articles" as UC_Articles
+  usecase "Creer article" as UC_CreateArticle
+  usecase "Modifier article" as UC_UpdateArticle
+  usecase "Changer statut article" as UC_StatusArticle
+  usecase "Restocker article" as UC_RestockArticle
+  usecase "Supprimer article" as UC_DeleteArticle
+
+  usecase "Enregistrer vente" as UC_CreateSale
+  usecase "Consulter ventes" as UC_Sales
+  usecase "Generer facture PDF vente" as UC_SalePdf
+  usecase "Annuler vente" as UC_CancelSale
+
+  usecase "Creer commande fournisseur" as UC_CreateOrder
+  usecase "Consulter commandes" as UC_Orders
+  usecase "Modifier commande" as UC_UpdateOrder
+  usecase "Changer statut commande" as UC_StatusOrder
+  usecase "Marquer commande livree" as UC_DeliverOrder
+  usecase "Generer facture PDF commande" as UC_OrderPdf
+  usecase "Supprimer commande" as UC_DeleteOrder
+
+  usecase "Consulter historique" as UC_History
+  usecase "Lancer backup manuel" as UC_BackupManual
+  usecase "Consulter notifications" as UC_Notifications
+  usecase "Marquer notifications comme lues" as UC_ReadNotifications
+
+  usecase "Mettre a jour stock automatiquement" as UC_AutoStock
+  usecase "Envoyer alertes et notifications" as UC_Alerts
+  usecase "Verifier articles expires" as UC_ExpireCheck
+  usecase "Executer backup automatique" as UC_BackupAuto
+}
+
+User --> UC_Login
+User --> UC_Profile
+User --> UC_Dashboard
+User --> UC_Clients
+User --> UC_Fournisseurs
+User --> UC_Articles
+User --> UC_CreateArticle
+User --> UC_UpdateArticle
+User --> UC_StatusArticle
+User --> UC_RestockArticle
+User --> UC_DeleteArticle
+User --> UC_CreateSale
+User --> UC_Sales
+User --> UC_SalePdf
+User --> UC_CancelSale
+User --> UC_CreateOrder
+User --> UC_Orders
+User --> UC_UpdateOrder
+User --> UC_StatusOrder
+User --> UC_DeliverOrder
+User --> UC_OrderPdf
+User --> UC_DeleteOrder
+User --> UC_History
+User --> UC_Notifications
+User --> UC_ReadNotifications
+
+Admin --> UC_BackupManual
+Admin --> UC_ExpireCheck
+Admin --> UC_BackupAuto
+
+Scheduler --> UC_ExpireCheck
+Scheduler --> UC_BackupAuto
+
+UC_CreateSale .> UC_AutoStock : <<include>>
+UC_CancelSale .> UC_AutoStock : <<include>>
+UC_DeliverOrder .> UC_AutoStock : <<include>>
+UC_CreateOrder .> UC_Alerts : <<include>>
+UC_CreateSale .> UC_Alerts : <<include>>
+UC_CreateArticle .> UC_Alerts : <<include>>
+UC_UpdateArticle .> UC_Alerts : <<include>>
+UC_StatusArticle .> UC_Alerts : <<include>>
+UC_RestockArticle .> UC_Alerts : <<include>>
+UC_ExpireCheck .> UC_Alerts : <<include>>
+UC_BackupManual .> UC_History : <<include>>
+UC_BackupAuto .> UC_History : <<include>>
+
+note right of UC_AutoStock
+  Vente:
+  - decrement du stock
+  - passage a "epuise" si stock = 0
+
+  Annulation vente:
+  - restitution du stock
+
+  Livraison commande:
+  - increment du stock
+  - reactivation possible de l'article
+end note
+@enduml

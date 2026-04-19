@@ -1,0 +1,73 @@
+<mxfile host="65bd71144e">
+    <diagram id="usecase-gs-ocp-min" name="Cas d&#39;utilisation - Minimal">
+        <mxGraphModel dx="999" dy="633" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="system" value="Systeme GS-OCP&#xa;Gestion de stock" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;strokeColor=#23404f;fillColor=#f7fbfc;fontSize=18;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="302" y="50" width="1050" height="780" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg_main" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;Fonctionnalites principales&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5b8a72;fillColor=#eaf5ee;fontStyle=1;fontSize=15;arcSize=10;" parent="system" vertex="1">
+                    <mxGeometry x="50" y="50" width="420" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_dashboard" value="Consulter tableau de bord" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#5b8a72;fillColor=#ffffff;fontSize=13;" parent="pkg_main" vertex="1">
+                    <mxGeometry x="30" y="20" width="220" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_articles" value="Gerer articles et stock" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#5b8a72;fillColor=#ffffff;fontSize=13;" parent="pkg_main" vertex="1">
+                    <mxGeometry x="110" y="100" width="220" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_sales" value="Enregistrer ventes" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#5b8a72;fillColor=#ffffff;fontSize=13;" parent="pkg_main" vertex="1">
+                    <mxGeometry x="110" y="220" width="220" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg_orders" value="Approvisionnement" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#b35c44;fillColor=#fdf0ec;fontStyle=1;fontSize=15;arcSize=10;" parent="system" vertex="1">
+                    <mxGeometry x="540" y="50" width="420" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_orders" value="Gerer commandes fournisseurs" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#b35c44;fillColor=#ffffff;fontSize=13;" parent="pkg_orders" vertex="1">
+                    <mxGeometry x="90" y="60" width="240" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_deliver_order" value="Marquer commande livree" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#b35c44;fillColor=#ffffff;fontSize=13;" parent="pkg_orders" vertex="1">
+                    <mxGeometry x="90" y="180" width="240" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg_support" value="Suivi et controle" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#4f6d7a;fillColor=#eef5f7;fontStyle=1;fontSize=15;arcSize=10;" parent="system" vertex="1">
+                    <mxGeometry x="300" y="420" width="700" height="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_notifications" value="Consulter notifications" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#4f6d7a;fillColor=#ffffff;fontSize=13;" parent="pkg_support" vertex="1">
+                    <mxGeometry x="40" y="90" width="180" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_history" value="Consulter historique" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#4f6d7a;fillColor=#ffffff;fontSize=13;" parent="pkg_support" vertex="1">
+                    <mxGeometry x="260" y="90" width="180" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_backup" value="Lancer backup manuel" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#4f6d7a;fillColor=#ffffff;fontSize=13;" parent="pkg_support" vertex="1">
+                    <mxGeometry x="480" y="90" width="180" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_admin" value="Administrateur" style="shape=mxgraph.uml.actor;whiteSpace=wrap;html=1;strokeColor=#2f4858;fillColor=#daeaf0;fontSize=15;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="360" width="70" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="e1" value="" style="endArrow=none;strokeColor=#2f4858;html=1;" parent="1" source="actor_admin" target="uc_dashboard" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2" value="" style="endArrow=none;strokeColor=#2f4858;html=1;" parent="1" source="actor_admin" target="uc_articles" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e3" value="" style="endArrow=none;strokeColor=#2f4858;html=1;" parent="1" source="actor_admin" target="uc_sales" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e4" value="" style="endArrow=none;strokeColor=#2f4858;html=1;" parent="1" source="actor_admin" target="uc_orders" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e5" value="" style="endArrow=none;strokeColor=#2f4858;html=1;" parent="1" source="actor_admin" target="uc_deliver_order" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e6" value="" style="endArrow=none;strokeColor=#2f4858;html=1;" parent="1" source="actor_admin" target="uc_notifications" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e7" value="" style="endArrow=none;strokeColor=#2f4858;html=1;" parent="1" source="actor_admin" target="uc_history" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e8" value="" style="endArrow=none;strokeColor=#2f4858;html=1;" parent="1" source="actor_admin" target="uc_backup" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

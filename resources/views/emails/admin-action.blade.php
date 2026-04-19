@@ -13,7 +13,7 @@
                     <tr>
                         <td align="center" style="padding: 24px 32px; background-color: #f9fafb;">
                             @php
-                                $logoPath = public_path('logoocp-removebg-preview.png');
+                                $logoPath = public_path('C:\Users\Gros Info\Desktop\gs-backend-ocp\gestion-stock-ocp\gs-laravel\public\logoocp-removebg-preview.png');
                             @endphp
 
                             @if (is_file($logoPath))

@@ -5,8 +5,6 @@ namespace App\Observers;
 use App\Models\Vente;
 use App\Models\Article;
 use App\Notifications\StockBasNotification;
-use App\Notifications\ArticleExpireNotification;
-use Illuminate\Support\Facades\DB;
 
 class VenteObserver
 {

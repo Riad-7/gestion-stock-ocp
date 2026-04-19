@@ -10,7 +10,6 @@
         <div class="panel-soft p-6 sm:p-8">
             <form method="POST" action="{{ route('articles.store') }}" class="grid gap-6 md:grid-cols-2">
                 @csrf
-
                 <div class="md:col-span-2">
                     <label for="produit_id" class="block text-sm font-medium text-slate-700">Produit</label>
                     <select id="produit_id" name="produit_id" class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" required>
